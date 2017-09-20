@@ -1,0 +1,1 @@
+{"Encrypt":false,"SecureKey":"snvxowej","WopiDiscovery":"http://owa.hunnu.edu.cn/hosting/discovery","DatabaseServer":"202.197.122.52","DatabaseName":"wopitest","DatabaseUser":"wopitest","DatabasePass":"Hnsd123","Domain":"localhost:59172"}
