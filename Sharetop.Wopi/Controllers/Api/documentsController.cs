@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Aspose.Words;
+using Newtonsoft.Json;
 using Sharetop.Wopi.Models;
 using Sharetop.Wopi.Models.Api;
 using Sharetop.Wopi.Security;
@@ -211,6 +212,19 @@ namespace Sharetop.Wopi.Controllers.Api
                     f.OwnerId = info.OwnerId;
 
                     await f.PopulateActions();
+                
+                    if (!String.IsNullOrEmpty(info.Template))
+                    {
+                        //提供了模板
+                        try
+                        {
+                            f.WriteContent(buildFromTemplate(info));
+                        }
+                        catch(Exception ex)
+                        {
+                            ServerUtil.LogException(ex);
+                        }
+                    }
 
                     f.Save();
 
@@ -228,6 +242,19 @@ namespace Sharetop.Wopi.Controllers.Api
 
                         await f.PopulateActions();
 
+                        if (!String.IsNullOrEmpty(info.Template))
+                        {
+                            //提供了模板
+                            try
+                            {
+                                f.WriteContent(buildFromTemplate(info));
+                            }
+                            catch (Exception ex)
+                            {
+                                ServerUtil.LogException(ex);
+                            }
+                        }
+
                         f.Save();
 
                         response = ServerUtil.returnStatus(HttpStatusCode.OK, "Success");
@@ -244,10 +271,39 @@ namespace Sharetop.Wopi.Controllers.Api
             return response;
         }
 
+        private byte[] buildFromTemplate(FileInfo info)
+        {
+            var tFile = ServerUtil.MapPath(String.Format("/App_Data/Template/{0}.{1}", info.Template, info.Extension));
+            if (!System.IO.File.Exists(tFile))
+            {
+                throw new Exception("Template not found.");
+            }
+
+            if (String.IsNullOrEmpty(info.Caption)) info.Caption = "";
+            if (String.IsNullOrEmpty(info.Content)) info.Content = "";
+            if (String.IsNullOrEmpty(info.From)) info.From = "";
+            if (String.IsNullOrEmpty(info.To)) info.To = "";
+            if (String.IsNullOrEmpty(info.Date)) info.Date = DateTime.Now.ToString("yyyy年M月d日");
+
+            var doc = new Document(tFile);
+
+            doc.Range.Replace("%CAPTION%", info.Caption, false, false);
+            doc.Range.Replace("%TO%", info.To, false, false);
+            doc.Range.Replace("%CONTENT%", info.Content, false, false);
+            doc.Range.Replace("%FROM%", info.From, false, false);
+            doc.Range.Replace("%DATE%", info.Date, false, false);
+
+            var outStream = new System.IO.MemoryStream();
+
+            doc.Save(outStream, SaveFormat.Docx);
+
+            return outStream.ToArray();
+        }
+
         [ApiProofValidationFilter]
         [HttpPost]
         [Route("api/documents/{id}/contents")]
-        public HttpResponseMessage PostContents(Guid id)
+        public async Task<HttpResponseMessage> PostContentsAsync(Guid id)
         {
             HttpResponseMessage response;
             try
@@ -262,6 +318,24 @@ namespace Sharetop.Wopi.Controllers.Api
                         // Update the file in blob storage
                         var bytes = new byte[HttpContext.Current.Request.InputStream.Length];
                         HttpContext.Current.Request.InputStream.Read(bytes, 0, bytes.Length);
+
+                        if (f.Extension() == "doc")
+                        {
+                            //更新为docx
+                            var instream = new System.IO.MemoryStream(bytes);
+                            var outstream = new System.IO.MemoryStream();
+                            var doc = new Document(instream);
+
+                            doc.Save(outstream, SaveFormat.Docx);
+
+                            bytes = outstream.ToArray();
+                            f.BaseFileName += "x";
+
+                            await f.PopulateActions();
+
+                            instream.Close();
+                            outstream.Close();
+                        }
 
                         f.WriteContent(bytes);
 

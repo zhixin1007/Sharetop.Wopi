@@ -14,6 +14,11 @@ namespace Sharetop.Wopi.Models
         [JsonProperty(PropertyName = "BaseFileName")]
         public string BaseFileName { get; set; }
 
+        public string Extension()
+        {
+            return BaseFileName.Substring(BaseFileName.LastIndexOf('.') + 1).ToLower();
+        }
+
         [JsonProperty(PropertyName = "Container")]
         public string Container { get; set; }
 

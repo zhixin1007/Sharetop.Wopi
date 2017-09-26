@@ -16,6 +16,12 @@ namespace Sharetop.Wopi.Models.Api
         public string OwnerId { get; set; }
         public string Caption { get; set; }
         public string Extension { get; set; }
+        public string Template { get; set; }
+        public string UserDisplayName { get; set; }
+        public string To { get; set; }
+        public string From { get; set; }
+        public string Date { get; set; }
+        public string Content { get; set; }
     }
 
     public class UserAction

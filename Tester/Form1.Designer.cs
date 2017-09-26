@@ -39,6 +39,7 @@
             this.btnLogin = new System.Windows.Forms.Button();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.lbActions = new System.Windows.Forms.ListBox();
+            this.btnTemplate = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -56,7 +57,6 @@
             this.tbServer.Name = "tbServer";
             this.tbServer.Size = new System.Drawing.Size(200, 25);
             this.tbServer.TabIndex = 1;
-            this.tbServer.Text = "ows.hunnu.edu.cn";
             // 
             // tbClientID
             // 
@@ -138,11 +138,23 @@
             this.lbActions.TabIndex = 9;
             this.lbActions.DoubleClick += new System.EventHandler(this.lbActions_SelectedIndexChanged);
             // 
+            // btnTemplate
+            // 
+            this.btnTemplate.Enabled = false;
+            this.btnTemplate.Location = new System.Drawing.Point(254, 44);
+            this.btnTemplate.Name = "btnTemplate";
+            this.btnTemplate.Size = new System.Drawing.Size(121, 31);
+            this.btnTemplate.TabIndex = 10;
+            this.btnTemplate.Text = "从模板创建";
+            this.btnTemplate.UseVisualStyleBackColor = true;
+            this.btnTemplate.Click += new System.EventHandler(this.btnTemplate_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(975, 633);
+            this.Controls.Add(this.btnTemplate);
             this.Controls.Add(this.lbActions);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.btnAdd);
@@ -173,6 +185,7 @@
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.OpenFileDialog ofd;
         private System.Windows.Forms.ListBox lbActions;
+        private System.Windows.Forms.Button btnTemplate;
     }
 }
 

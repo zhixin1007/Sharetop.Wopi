@@ -15,8 +15,8 @@ namespace Sharetop.Wopi.Utils
     {
         protected ConfigBag()
         {
-            WopiDiscovery = "http://owa.hunnu.edu.cn/hosting/discovery";
-            SecureKey = "snvxowej";
+            WopiDiscovery = "http://owa.company.com/hosting/discovery";
+            SecureKey = "abcd1234";
 
             DatabaseServer = "127.0.0.1";
             DatabaseName = "Sharetop";

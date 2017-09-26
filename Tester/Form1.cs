@@ -54,6 +54,7 @@ namespace Tester
 
             btnLogin.Enabled = false;
             btnAdd.Enabled = true;
+            btnTemplate.Enabled = true;
 
             //client.Headers.Add(String.Format("X-SWA-ClientID:{0}", tbClientID.Text));
             client.Headers.Add(String.Format("X-SWA-Proof:{0}", token));
@@ -102,6 +103,25 @@ namespace Tester
             var url = client.DownloadString(String.Format("http://{0}/api/documents/{1}/url?UserId=14263&UserDisplayName=zhixin1007&Action={2}", tbServer.Text.Trim(), lbFile.SelectedItem.ToString(),lbActions.SelectedItem.ToString()));
 
             System.Diagnostics.Process.Start(url);
+        }
+
+        private void btnTemplate_Click(object sender, EventArgs e)
+        {
+            var kv = new System.Collections.Specialized.NameValueCollection();
+            kv.Add("OwnerId", "14263");
+            kv.Add("Caption", "关于请求下拨网络安全工作经费的请示");
+            kv.Add("Extension", "docx");
+            kv.Add("To", "校领导");
+            kv.Add("From", "信息化办公室");
+            kv.Add("Template", "xngw");
+
+            var fid = Encoding.UTF8.GetString(client.UploadValues(
+            String.Format("http://{0}/api/documents/create", tbServer.Text.Trim()),
+            kv));
+
+            //client.UploadData(String.Format("http://{0}/api/documents/{1}/contents", tbServer.Text.Trim(), fid), bytes);
+
+            lbFile.Items.Add(fid);
         }
     }
 }
